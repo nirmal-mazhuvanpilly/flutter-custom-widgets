@@ -52,6 +52,12 @@ class _CommunityPageState extends State<CommunityPage>
                   indicatorPadding: EdgeInsets.zero,
                   padding: EdgeInsets.zero,
                   labelPadding: EdgeInsets.zero,
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) {
+                    return states.contains(MaterialState.focused)
+                        ? null
+                        : Colors.white.withOpacity(.06);
+                  }),
                   tabs: const [
                     SizedBox(
                         height: double.maxFinite,

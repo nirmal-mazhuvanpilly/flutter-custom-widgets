@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:limoverse_widgets/community/widgets/expandable.dart';
@@ -51,6 +52,7 @@ class CommunityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const sampleText =
         """We are going live tomorrow at 11:00am to announce the winners Celebrate every milestone along the way, no matter how small that the prize. www.livehealthcaresolution.com""";
+
     return Container(
         width: double.maxFinite,
         margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -66,14 +68,24 @@ class CommunityCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    "https://avatars.githubusercontent.com/u/85497740?s=400&u=8cfe7db1ab46f5f8b2d2d33148f1609e2f8da372&v=4"))),
+                      CachedNetworkImage(
+                        imageUrl:
+                            "https://avatars.githubusercontent.com/u/85497740?s=400&u=8cfe7db1ab46f5f8b2d2d33148f1609e2f8da372&v=4",
+                        maxHeightDiskCache:
+                            (48 * MediaQuery.of(context).devicePixelRatio)
+                                .round(),
+                        maxWidthDiskCache:
+                            (48 * MediaQuery.of(context).devicePixelRatio)
+                                .round(),
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            height: 48,
+                            width: 48,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(image: imageProvider)),
+                          );
+                        },
                       ),
                       const SizedBox(width: 10),
                       Flexible(
@@ -112,18 +124,34 @@ class CommunityCard extends StatelessWidget {
           const SizedBox(height: 24),
           Column(
             children: [
-              Container(
-                width: double.maxFinite,
+              SizedBox(
                 height: MediaQuery.of(context).size.width * .9227,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            "https://footwearnews.com/wp-content/uploads/2022/12/SP33-Pippen-Modernist-01.jpg?w=1024&h=686&crop=1"))),
+                width: double.maxFinite,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return CachedNetworkImage(
+                    imageUrl:
+                        "https://footwearnews.com/wp-content/uploads/2022/12/SP33-Pippen-Modernist-01.jpg?w=1024&h=686&crop=1",
+                    maxHeightDiskCache: (constraints.maxHeight *
+                            MediaQuery.of(context).devicePixelRatio)
+                        .round(),
+                    maxWidthDiskCache: (constraints.maxHeight *
+                            MediaQuery.of(context).devicePixelRatio)
+                        .round(),
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        width: double.maxFinite,
+                        height: MediaQuery.of(context).size.width * .9227,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                            ),
+                            image: DecorationImage(
+                                fit: BoxFit.cover, image: imageProvider)),
+                      );
+                    },
+                  );
+                }),
               ),
               Material(
                 color: HexColor("#171717"),

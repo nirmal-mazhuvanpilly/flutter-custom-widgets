@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:limoverse_widgets/community/overlay/reaction_overlay.dart';
@@ -279,14 +280,26 @@ class CommunityCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 30,
                         width: 30,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    "https://avatars.githubusercontent.com/u/85497740?s=400&u=8cfe7db1ab46f5f8b2d2d33148f1609e2f8da372&v=4"))),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              "https://avatars.githubusercontent.com/u/85497740?s=400&u=8cfe7db1ab46f5f8b2d2d33148f1609e2f8da372&v=4",
+                          maxHeightDiskCache:
+                              (30 * MediaQuery.of(context).devicePixelRatio)
+                                  .round(),
+                          maxWidthDiskCache:
+                              (30 * MediaQuery.of(context).devicePixelRatio)
+                                  .round(),
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(image: imageProvider)),
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(width: 10),
                       Flexible(

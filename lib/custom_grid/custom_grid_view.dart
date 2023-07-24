@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:limoverse_widgets/custom_grid/nft_details.dart';
 
 class CustomGridView extends StatefulWidget {
   const CustomGridView({super.key});
@@ -158,7 +159,9 @@ class TabViewItem extends StatelessWidget {
               return Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NftDetails()));
+                  },
                   splashColor: Colors.white.withOpacity(.06),
                   highlightColor: Colors.white.withOpacity(.03),
                   borderRadius: BorderRadius.circular(10),

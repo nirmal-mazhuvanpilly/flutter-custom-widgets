@@ -49,18 +49,36 @@ class NftDetails extends StatelessWidget {
           children: [
             SizedBox(
               height: appBar.preferredSize.height +
-                  (MediaQuery.of(context).padding.top * 1.5),
+                  (MediaQuery.of(context).padding.top * 1),
             ),
-            const SizedBox(height: 10),
-            SizedBox(
+            Container(
               height: size.width * 1.2533,
+              color: Colors.black,
               child: Stack(
+                alignment: Alignment.center,
                 children: [
                   CachedNetworkImage(
                     imageUrl:
-                        "https://images.squarespace-cdn.com/content/5e55383538da6e7b34219641/1620689168715-407HF2XX7U03CFBNHEDM/VADER.jpg?content-type=image%2Fjpeg",
+                        "https://vo.limoverse.io/_ipx/w_1920,q_75/https%3A%2F%2Flimoverse.mypinata.cloud%2Fipfs%2FQmRyTGMKabGkCVGtrNGKwB16zfqpqf4zgf8oEiF2Rn3JjT?url=https%3A%2F%2Flimoverse.mypinata.cloud%2Fipfs%2FQmRyTGMKabGkCVGtrNGKwB16zfqpqf4zgf8oEiF2Rn3JjT&w=1920&q=75",
                     imageBuilder: (context, imageProvider) {
                       return Container(
+                        height: size.width * 1.2530,
+                        foregroundDecoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                Colors.black,
+                                Colors.black.withOpacity(.25),
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.black.withOpacity(.25),
+                                Colors.black,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter),
+                        ),
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 fit: BoxFit.cover, image: imageProvider)),
@@ -69,31 +87,9 @@ class NftDetails extends StatelessWidget {
                     placeholder: (context, url) {
                       return Container(
                         height: size.width * 1.2533,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                                Colors.pink,
-                                Colors.pinkAccent,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter),
-                        ),
+                        color: Colors.black,
                       );
                     },
-                  ),
-                  Container(
-                    height: size.width * 1.2533,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            Colors.transparent,
-                            Colors.black.withOpacity(.05),
-                            Colors.black,
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter),
-                    ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -115,7 +111,12 @@ class NftDetails extends StatelessWidget {
                             height: 60,
                             decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(.10),
-                                borderRadius: BorderRadius.circular(5)),
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  bottomLeft: Radius.circular(5),
+                                  topRight: Radius.circular(100),
+                                  bottomRight: Radius.circular(100),
+                                )),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

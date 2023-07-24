@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.limoverse_widgets">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="limoverse_widgets"
         android:name="${applicationName}"

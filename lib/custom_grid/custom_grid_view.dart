@@ -160,7 +160,8 @@ class TabViewItem extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NftDetails()));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => NftDetails()));
                   },
                   splashColor: Colors.white.withOpacity(.06),
                   highlightColor: Colors.white.withOpacity(.03),
@@ -173,7 +174,7 @@ class TabViewItem extends StatelessWidget {
                         width: double.maxFinite,
                         child: CachedNetworkImage(
                           imageUrl:
-                              "https://footwearnews.com/wp-content/uploads/2022/12/SP33-Pippen-Modernist-01.jpg?w=1024&h=686&crop=1",
+                              "https://vo.limoverse.io/_ipx/w_1920,q_75/https%3A%2F%2Flimoverse.mypinata.cloud%2Fipfs%2FQmRyTGMKabGkCVGtrNGKwB16zfqpqf4zgf8oEiF2Rn3JjT?url=https%3A%2F%2Flimoverse.mypinata.cloud%2Fipfs%2FQmRyTGMKabGkCVGtrNGKwB16zfqpqf4zgf8oEiF2Rn3JjT&w=1920&q=75",
                           maxHeightDiskCache: imageDiskCache,
                           maxWidthDiskCache: imageDiskCache,
                           imageBuilder: (context, imageProvider) {

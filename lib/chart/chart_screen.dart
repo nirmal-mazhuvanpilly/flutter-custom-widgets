@@ -12,8 +12,13 @@ class ChartScreen extends StatefulWidget {
 
 class _ChartScreenState extends State<ChartScreen> {
   List<Color> gradientColors = [
-    Colors.cyan,
-    Colors.blue,
+    Colors.red,
+    Colors.deepOrange,
+    Colors.orange,
+    Colors.lightGreenAccent,
+    Colors.lightGreen,
+    Colors.yellowAccent,
+    Colors.yellow,
   ];
 
   bool showAvg = false;
@@ -191,15 +196,12 @@ class _ChartScreenState extends State<ChartScreen> {
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
+              color: const Color(0xff37434d),
+              strokeWidth: 1,
+              dashArray: [0, 1, 2]);
         },
         getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
+          return FlLine(color: const Color(0xff37434d), strokeWidth: 1);
         },
       ),
       titlesData: FlTitlesData(
@@ -223,7 +225,7 @@ class _ChartScreenState extends State<ChartScreen> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 20,
           ),
         ),
       ),
@@ -237,25 +239,34 @@ class _ChartScreenState extends State<ChartScreen> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          spots: getChart(),
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 1.5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
+            spots: getChart(),
+            isCurved: true,
             gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.5))
-                  .toList(),
+              colors: gradientColors,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-          ),
-        ),
+            barWidth: 1.5,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: false,
+            ),
+            belowBarData: BarAreaData(
+              show: true,
+              cutOffY: 0,
+              applyCutOffY: true,
+              gradient: LinearGradient(
+                colors: gradientColors
+                    .map((color) => color.withOpacity(0.5))
+                    .toList(),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            aboveBarData: BarAreaData(
+              show: true,
+              color: Colors.cyanAccent.withOpacity(.10),
+            )),
       ],
     );
   }

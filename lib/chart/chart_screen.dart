@@ -18,6 +18,25 @@ class _ChartScreenState extends State<ChartScreen> {
 
   bool showAvg = false;
 
+  List<FlSpot> getChart() {
+    final random = Random();
+
+    return [
+      FlSpot(0, random.nextDouble() * 5.8),
+      FlSpot(1, random.nextDouble() * 5.8),
+      FlSpot(2, random.nextDouble() * 5.8),
+      FlSpot(3, random.nextDouble() * 5.8),
+      FlSpot(4, random.nextDouble() * 5.8),
+      FlSpot(5, random.nextDouble() * 5.8),
+      FlSpot(6, random.nextDouble() * 5.8),
+      FlSpot(7, random.nextDouble() * 5.8),
+      FlSpot(8, random.nextDouble() * 5.8),
+      FlSpot(9, random.nextDouble() * 5.8),
+      FlSpot(10, random.nextDouble() * 5.8),
+      FlSpot(11, random.nextDouble() * 5.8),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,6 +52,8 @@ class _ChartScreenState extends State<ChartScreen> {
                   aspectRatio: 1.70,
                   child: LineChart(
                     showAvg ? avgData() : mainData(),
+                    swapAnimationDuration: const Duration(milliseconds: 250),
+                    swapAnimationCurve: Curves.linear,
                   ),
                 ),
               ),
@@ -44,6 +65,19 @@ class _ChartScreenState extends State<ChartScreen> {
                 },
                 child: Text(
                   'Average',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color:
+                        showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                child: Text(
+                  'Change',
                   style: TextStyle(
                     fontSize: 12,
                     color:
@@ -203,20 +237,7 @@ class _ChartScreenState extends State<ChartScreen> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(1, 2),
-            FlSpot(2, 5),
-            FlSpot(3, 3.1),
-            FlSpot(4, 4),
-            FlSpot(5, 2.6),
-            FlSpot(6, 3),
-            FlSpot(7, 4.8),
-            FlSpot(8, 3),
-            FlSpot(9, 4),
-            FlSpot(10, 3),
-            FlSpot(11, 3.8),
-          ],
+          spots: getChart(),
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,

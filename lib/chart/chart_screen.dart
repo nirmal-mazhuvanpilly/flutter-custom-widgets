@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:rainbow_color/rainbow_color.dart';
 
 class ChartScreen extends StatefulWidget {
   const ChartScreen({super.key});
@@ -17,6 +18,13 @@ class _ChartScreenState extends State<ChartScreen> {
     Colors.orangeAccent,
     Colors.yellowAccent,
   ];
+
+  final rainBowColorTween = RainbowColorTween([
+    Colors.red,
+    Colors.deepOrange,
+    Colors.orangeAccent,
+    Colors.yellowAccent,
+  ]);
 
   bool showAvg = false;
 
@@ -271,8 +279,12 @@ class _ChartScreenState extends State<ChartScreen> {
             isStrokeCapRound: true,
             dotData: FlDotData(
               show: true,
-              checkToShowDot: (spot, barData) {
-                return true;
+              getDotPainter: (flSpot, _, __, ___) {
+                final color = 1 - (flSpot.y / 5.8);
+                return FlDotCirclePainter(
+                    color: rainBowColorTween.lerp(color),
+                    strokeColor: Colors.cyanAccent.withOpacity(.10),
+                    strokeWidth: 1);
               },
             ),
             belowBarData: BarAreaData(

@@ -51,7 +51,7 @@ class _ChartScreenState extends State<ChartScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: Colors.black,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -334,16 +334,16 @@ class _ChartScreenState extends State<ChartScreen> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
             interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
           ),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
             interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 20,
           ),
         ),
         topTitles: AxisTitles(
@@ -363,43 +363,45 @@ class _ChartScreenState extends State<ChartScreen> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: [
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
+            spots: const [
+              FlSpot(0, 3.44),
+              FlSpot(2.6, 3.44),
+              FlSpot(4.9, 3.44),
+              FlSpot(6.8, 3.44),
+              FlSpot(8, 3.44),
+              FlSpot(9.5, 3.44),
+              FlSpot(11, 3.44),
             ],
-          ),
-          barWidth: 1.5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
+            isCurved: true,
             gradient: LinearGradient(
               colors: [
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
+                    .lerp(0.2)!,
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
+                    .lerp(0.2)!,
               ],
             ),
-          ),
-        ),
+            barWidth: 1.5,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: false,
+            ),
+            belowBarData: BarAreaData(
+              show: true,
+              cutOffY: 0,
+              applyCutOffY: true,
+              gradient: LinearGradient(
+                colors: gradientColors
+                    .map((color) => color.withOpacity(0.5))
+                    .toList(),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            aboveBarData: BarAreaData(
+              show: true,
+              color: Colors.cyanAccent.withOpacity(.10),
+            )),
       ],
     );
   }

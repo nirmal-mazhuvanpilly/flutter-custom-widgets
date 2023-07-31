@@ -198,7 +198,13 @@ class _ChartScreenState extends State<ChartScreen> {
                   color: Colors.cyanAccent, strokeWidth: 1, dashArray: [2, 4]);
               return TouchedSpotIndicatorData(
                 line,
-                FlDotData(show: true),
+                FlDotData(
+                  show: true,
+                  getDotPainter: (_, __, ___, ____) {
+                    return FlDotCirclePainter(
+                        color: Colors.lightGreenAccent, radius: 7);
+                  },
+                ),
               );
             },
           ).toList();

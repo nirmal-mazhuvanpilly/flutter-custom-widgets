@@ -292,6 +292,7 @@ class NftDetails extends StatelessWidget {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: 10,
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
                     itemBuilder: (context, index) {
                       return Material(
                         color: Colors.transparent,

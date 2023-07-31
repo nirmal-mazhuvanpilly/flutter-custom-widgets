@@ -14,11 +14,8 @@ class _ChartScreenState extends State<ChartScreen> {
   List<Color> gradientColors = [
     Colors.red,
     Colors.deepOrange,
-    Colors.orange,
-    Colors.lightGreenAccent,
-    Colors.lightGreen,
+    Colors.orangeAccent,
     Colors.yellowAccent,
-    Colors.yellow,
   ];
 
   bool showAvg = false;
@@ -189,6 +186,24 @@ class _ChartScreenState extends State<ChartScreen> {
 
   LineChartData mainData() {
     return LineChartData(
+      lineTouchData: LineTouchData(
+        enabled: true,
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Colors.red.withOpacity(.10),
+        ),
+        getTouchedSpotIndicator: (barData, spotIndexes) {
+          return spotIndexes.map(
+            (int index) {
+              final line = FlLine(
+                  color: Colors.cyanAccent, strokeWidth: 1, dashArray: [2, 4]);
+              return TouchedSpotIndicatorData(
+                line,
+                FlDotData(show: true),
+              );
+            },
+          ).toList();
+        },
+      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -249,7 +264,10 @@ class _ChartScreenState extends State<ChartScreen> {
             barWidth: 1.5,
             isStrokeCapRound: true,
             dotData: FlDotData(
-              show: false,
+              show: true,
+              checkToShowDot: (spot, barData) {
+                return true;
+              },
             ),
             belowBarData: BarAreaData(
               show: true,

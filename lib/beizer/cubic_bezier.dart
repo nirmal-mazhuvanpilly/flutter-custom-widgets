@@ -8,18 +8,32 @@ class CubicBezierCurve extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Container(
-          color: Colors.red,
-          height: 250,
-          width: 250,
-          child: CustomPaint(
-            painter: BezierCurvePainter(
-              p0: const Offset(0, 250),
-              p1: const Offset(50, 0),
-              p2: const Offset(200, 250),
-              p3: const Offset(250, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              color: Colors.red,
+              height: 250,
+              width: 250,
+              child: CustomPaint(
+                painter: BezierCurvePainter(
+                  p0: const Offset(0, 250),
+                  p1: const Offset(50, 0),
+                  p2: const Offset(200, 250),
+                  p3: const Offset(250, 0),
+                ),
+              ),
             ),
-          ),
+            const SizedBox(height: 50),
+            Container(
+              color: Colors.transparent,
+              height: 250,
+              width: double.maxFinite,
+              child: CustomPaint(
+                painter: CubicBezierCurvePainter(),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -42,8 +56,6 @@ class BezierCurvePainter extends CustomPainter {
     canvas.drawLine(p0, p1, linePaint);
     canvas.drawLine(p1, p2, linePaint);
     canvas.drawLine(p2, p3, linePaint);
-
-
 
     final path = Path()
       ..moveTo(p0.dx, p0.dy)
@@ -70,5 +82,74 @@ class BezierCurvePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
+  }
+}
+
+class CubicBezierCurvePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final List<double> dataPoints = [
+      0,
+      20,
+      0,
+      size.height,
+      40,
+      30,
+      0,
+      20,
+      0,
+      size.height,
+      40,
+      30
+    ];
+    final path = Path();
+
+    final double dataPointSpacing = size.width / (dataPoints.length - 1);
+    final double graphHeight = size.height;
+
+    path.moveTo(0, graphHeight - dataPoints[0]);
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+
+    for (int i = 0; i < dataPoints.length - 1; i++) {
+      final double x1 = i * dataPointSpacing;
+      final double y1 = graphHeight - dataPoints[i];
+
+      final double x2 = (i + 1) * dataPointSpacing;
+      final double y2 = graphHeight - dataPoints[i + 1];
+
+      final double controlPointX1 = x1 + dataPointSpacing / 2;
+      final double controlPointY1 = y1;
+
+      final double controlPointX2 = x2 - dataPointSpacing / 2;
+      final double controlPointY2 = y2;
+
+      path.cubicTo(
+        controlPointX1,
+        controlPointY1,
+        controlPointX2,
+        controlPointY2,
+        x2,
+        y2,
+      );
+    }
+
+    const gradient = LinearGradient(
+      colors: [Colors.blue, Colors.green],
+    );
+
+    final paint = Paint()
+      ..shader =
+          gradient.createShader(Rect.fromCircle(center: center, radius: radius))
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:limoverse_widgets/beizer/cubic_bezier.dart';
 import 'package:limoverse_widgets/chart/chart_screen.dart';
 import 'package:limoverse_widgets/community/community_page.dart';
 import 'package:limoverse_widgets/custom_grid/custom_grid_view.dart';
@@ -185,6 +186,13 @@ class _HomeState extends State<Home> {
                       builder: (context) => const ChartScreen()));
                 },
                 child: const Text("Flutter Chart")),
+            const HeightWidget(height: 10),
+            TextButton(
+                onPressed: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const CubicBezierCurve()));
+                },
+                child: const Text("Bezier")),
           ],
         ),
       ),

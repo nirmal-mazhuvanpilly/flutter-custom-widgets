@@ -225,12 +225,11 @@ class _ChartScreenState extends State<ChartScreen> {
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-              color: const Color(0xff37434d),
-              strokeWidth: 1,
-              dashArray: [0, 1, 2]);
+            color: Colors.transparent,
+          );
         },
         getDrawingVerticalLine: (value) {
-          return FlLine(color: const Color(0xff37434d), strokeWidth: 1);
+          return FlLine(color: Colors.transparent);
         },
       ),
       titlesData: FlTitlesData(
@@ -244,7 +243,7 @@ class _ChartScreenState extends State<ChartScreen> {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
+            reservedSize: 0,
             interval: 1,
             getTitlesWidget: bottomTitleWidgets,
           ),
@@ -254,13 +253,12 @@ class _ChartScreenState extends State<ChartScreen> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 20,
+            reservedSize: 0,
           ),
         ),
       ),
       borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
+        show: false,
       ),
       minX: 0,
       maxX: 11,
@@ -268,41 +266,26 @@ class _ChartScreenState extends State<ChartScreen> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-            spots: getChart(),
-            isCurved: true,
-            gradient: LinearGradient(
-              colors: gradientColors,
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            barWidth: 1.5,
-            isStrokeCapRound: true,
-            dotData: FlDotData(
-              show: true,
-              getDotPainter: (flSpot, _, __, ___) {
-                final color = 1 - (flSpot.y / 5.8);
-                return FlDotCirclePainter(
-                    color: rainBowColorTween.lerp(color),
-                    strokeColor: Colors.cyanAccent.withOpacity(.10),
-                    strokeWidth: 1);
-              },
-            ),
-            belowBarData: BarAreaData(
-              show: true,
-              cutOffY: 0,
-              applyCutOffY: true,
-              gradient: LinearGradient(
-                colors: gradientColors
-                    .map((color) => color.withOpacity(0.5))
-                    .toList(),
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            aboveBarData: BarAreaData(
-              show: true,
-              color: Colors.cyanAccent.withOpacity(.10),
-            )),
+          spots: getChart(),
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: gradientColors,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          barWidth: 1.5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (flSpot, _, __, ___) {
+              final color = 1 - (flSpot.y / 5.8);
+              return FlDotCirclePainter(
+                  color: rainBowColorTween.lerp(color),
+                  strokeColor: Colors.cyanAccent.withOpacity(.10),
+                  strokeWidth: 1);
+            },
+          ),
+        ),
       ],
     );
   }

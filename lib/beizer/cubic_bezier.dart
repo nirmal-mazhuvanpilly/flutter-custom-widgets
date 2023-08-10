@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class CubicBezierCurve extends StatelessWidget {
+class CubicBezierCurve extends StatefulWidget {
   const CubicBezierCurve({super.key});
+
+  @override
+  State<CubicBezierCurve> createState() => _CubicBezierCurveState();
+}
+
+class _CubicBezierCurveState extends State<CubicBezierCurve> {
+  final ValueNotifier<Offset> localPosition = ValueNotifier(Offset(0,0));
 
   @override
   Widget build(BuildContext context) {
@@ -11,17 +18,27 @@ class CubicBezierCurve extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              color: Colors.red,
-              height: 250,
-              width: 250,
-              child: CustomPaint(
-                painter: BezierCurvePainter(
-                  p0: const Offset(0, 250),
-                  p1: const Offset(50, 0),
-                  p2: const Offset(200, 250),
-                  p3: const Offset(250, 0),
-                ),
+            GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                print(details.localPosition);
+                localPosition.value = details.localPosition;
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    color: Colors.cyanAccent.withOpacity(.10),
+                    height: 250,
+                    width: 250,
+                    child: CustomPaint(
+                      painter: BezierCurvePainter(
+                        p0: const Offset(0, 250),
+                        p1: const Offset(50, 0),
+                        p2: const Offset(200, 250),
+                        p3: const Offset(250, 0),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 50),
@@ -51,7 +68,7 @@ class BezierCurvePainter extends CustomPainter {
     final linePaint = Paint()
       ..color = Colors.cyanAccent
       ..style = PaintingStyle.fill
-      ..strokeWidth = 2.0;
+      ..strokeWidth = 1.0;
 
     canvas.drawLine(p0, p1, linePaint);
     canvas.drawLine(p1, p2, linePaint);
@@ -73,10 +90,10 @@ class BezierCurvePainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..strokeWidth = 2.0;
 
-    canvas.drawCircle(p0, 5, dotPaint);
-    canvas.drawCircle(p1, 5, dotPaint);
-    canvas.drawCircle(p2, 5, dotPaint);
-    canvas.drawCircle(p3, 5, dotPaint);
+    canvas.drawCircle(p0, 4, dotPaint);
+    canvas.drawCircle(p1, 4, dotPaint);
+    canvas.drawCircle(p2, 4, dotPaint);
+    canvas.drawCircle(p3, 4, dotPaint);
   }
 
   @override

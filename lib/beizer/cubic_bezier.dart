@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class CubicBezierCurve extends StatefulWidget {
@@ -8,7 +10,7 @@ class CubicBezierCurve extends StatefulWidget {
 }
 
 class _CubicBezierCurveState extends State<CubicBezierCurve> {
-  final ValueNotifier<Offset> localPosition = ValueNotifier(Offset(0,0));
+  final ValueNotifier<Offset> localPosition = ValueNotifier(const Offset(0, 0));
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,17 @@ class _CubicBezierCurveState extends State<CubicBezierCurve> {
                 painter: CubicBezierCurvePainter(),
               ),
             ),
+            const SizedBox(height: 50),
+            TextButton(
+                onPressed: () {
+                  String credentials = "419052:hGJFLyZ0iWF9MWocn37w";
+                  Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                  String encoded = stringToBase64.encode(credentials);
+                  String decoded = stringToBase64.decode(encoded);
+                  print(encoded);
+                  print(decoded);
+                },
+                child: const Text("Generate Base 64"))
           ],
         ),
       ),

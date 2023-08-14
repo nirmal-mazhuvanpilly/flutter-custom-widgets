@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:limoverse_widgets/utils.dart';
 
 class CubicBezierCurve extends StatefulWidget {
   const CubicBezierCurve({super.key});
@@ -62,7 +63,48 @@ class _CubicBezierCurveState extends State<CubicBezierCurve> {
                   print(encoded);
                   print(decoded);
                 },
-                child: const Text("Generate Base 64"))
+                child: const Text("Generate Base 64")),
+            const SizedBox(height: 50),
+            Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 5)
+                      .copyWith(left: 20, right: 10),
+                  margin: const EdgeInsets.only(left: 30),
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          HexColor("#1C3258"),
+                          HexColor("#1C3258").withOpacity(.50),
+                        ],
+                        stops: const [0.5, 1],
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
+                      )),
+                  child: const Text("Epigenetics",
+                      style: TextStyle(
+                          color: Colors.cyanAccent,
+                          fontStyle: FontStyle.italic)),
+                ),
+                Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.cyanAccent),
+                      gradient: LinearGradient(colors: [
+                        HexColor("#1C3258"),
+                        HexColor("#1C3258"),
+                      ])),
+                  child: const Center(
+                      child: Icon(Icons.access_time_sharp,
+                          color: Colors.cyanAccent)),
+                ),
+              ],
+            )
           ],
         ),
       ),

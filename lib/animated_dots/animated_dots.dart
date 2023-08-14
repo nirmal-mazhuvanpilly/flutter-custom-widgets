@@ -140,19 +140,15 @@ class _DistanceAnimationState extends State<DistanceAnimation>
     with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
   late final Animation animation;
-  late final Animation sizeAnimation;
 
   @override
   void initState() {
     super.initState();
 
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: const Duration(milliseconds: 5000));
     animation = Tween<double>(
             begin: widget.distance, end: widget.distanceEnd ?? widget.distance)
-        .animate(
-            CurvedAnimation(parent: animationController, curve: Curves.linear));
-    sizeAnimation = Tween<double>(begin: widget.size, end: widget.size - 2)
         .animate(
             CurvedAnimation(parent: animationController, curve: Curves.linear));
     animationController.forward();
@@ -225,7 +221,7 @@ class _AnimatedCustomContainerState extends State<AnimatedCustomContainer>
     super.initState();
 
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: const Duration(milliseconds: 5000));
 
     sizeAnimation = Tween<double>(begin: widget.size, end: widget.size - 2)
         .animate(
@@ -290,8 +286,8 @@ class _RotatingAnimationState extends State<RotatingAnimation>
     animationController = AnimationController(
         vsync: this, duration: widget.duration ?? const Duration(seconds: 10));
     animation = Tween<double>(begin: widget.begin ?? 0, end: widget.end ?? 360)
-        .animate(
-            CurvedAnimation(parent: animationController, curve: Curves.linear));
+        .animate(CurvedAnimation(
+            parent: animationController, curve: Curves.bounceIn));
     animationController.repeat();
   }
 
@@ -304,10 +300,9 @@ class _RotatingAnimationState extends State<RotatingAnimation>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController,
-      child: widget.child,
-      builder: (context, child) => Transform.rotate(
-          angle: animation.value * (math.pi / 180), child: child),
-    );
+        animation: animationController,
+        child: widget.child,
+        builder: (context, child) => Transform.rotate(
+            angle: animation.value * (math.pi / 180), child: child));
   }
 }

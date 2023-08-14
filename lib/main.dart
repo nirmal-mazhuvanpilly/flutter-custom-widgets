@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:limoverse_widgets/animated_dots/animated_dots.dart';
 import 'package:limoverse_widgets/beizer/cubic_bezier.dart';
 import 'package:limoverse_widgets/chart/chart_screen.dart';
 import 'package:limoverse_widgets/community/community_page.dart';
@@ -193,6 +194,13 @@ class _HomeState extends State<Home> {
                       builder: (context) => const CubicBezierCurve()));
                 },
                 child: const Text("Bezier")),
+            const HeightWidget(height: 10),
+            TextButton(
+                onPressed: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const AnimatedDots()));
+                },
+                child: const Text("Animated Circle Dots")),
           ],
         ),
       ),

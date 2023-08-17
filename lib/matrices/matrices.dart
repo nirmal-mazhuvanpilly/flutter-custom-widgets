@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class Matrices extends StatefulWidget {
   const Matrices({super.key});
@@ -11,16 +10,58 @@ class Matrices extends StatefulWidget {
 
 class _MatricesState extends State<Matrices>
     with SingleTickerProviderStateMixin {
+  double panStart = 0.0;
+  double panY = 0.0;
+  final ValueNotifier<double> currentPosition = ValueNotifier(0.0);
+
+  double getYPosition() {
+    if (currentPosition.value < 0) {
+      return 0;
+    } else if (currentPosition.value > 180) {
+      return 180;
+    } else {
+      return currentPosition.value;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Transform(
-          transform: Matrix4.identity()..rotateX(0 * pi / 180),
-          alignment: Alignment.center,
-          child: const CylinderWidget(
-            child: CustomContainer(),
+      body: GestureDetector(
+        onPanUpdate: (details) {
+          panY = (details.localPosition.dy - panStart);
+          currentPosition.value = currentPosition.value + (panY / 500);
+          if (currentPosition.value < 0) {
+            currentPosition.value = 0;
+          } else if (currentPosition.value > 180) {
+            currentPosition.value = 180;
+          }
+        },
+        onPanStart: (details) {
+          panStart = details.localPosition.dy;
+        },
+        onPanEnd: (details) {
+          // panStart = 0.0;
+        },
+        child: Container(
+          height: double.maxFinite,
+          width: double.maxFinite,
+          color: Colors.transparent,
+          child: Center(
+            child: ValueListenableBuilder(
+                valueListenable: currentPosition,
+                child: const CylinderWidget(
+                  child: CustomContainer(),
+                ),
+                builder: (context, value, child) {
+                  return Transform(
+                    transform: Matrix4.identity()
+                      ..rotateX(getYPosition() * pi / 180),
+                    alignment: Alignment.center,
+                    child: child,
+                  );
+                }),
           ),
         ),
       ),
@@ -178,66 +219,122 @@ class CustomContainer extends StatelessWidget {
       children: [
         Container(
           alignment: Alignment.center,
-          height: 175,
+          height: 100,
           width: 50,
           decoration: BoxDecoration(
+              shape: BoxShape.circle,
               gradient: LinearGradient(colors: [
-            Colors.white.withOpacity(.50),
-            Colors.greenAccent,
-            Colors.transparent,
-            Colors.yellowAccent,
-            // Colors.greenAccent,
-          ])),
+                Colors.white.withOpacity(.50),
+                Colors.greenAccent,
+                Colors.transparent,
+                Colors.yellowAccent,
+                // Colors.greenAccent,
+              ])),
         ),
-        Transform.rotate(
-          angle: 90 * pi / 180,
-          child: GradientText(
-            "XXX",
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 100,
-                fontWeight: FontWeight.w900),
-            colors: const [Colors.orange, Colors.transparent],
-            gradientDirection: GradientDirection.btt,
-          ),
+        Text(
+          "DDD",
+          style: TextStyle(
+              color: Colors.white.withOpacity(.30),
+              fontWeight: FontWeight.w900,
+              fontSize: 50),
+        ),
+        Transform(
+          transform: Matrix4.skewX(50 * pi / 180),
+          alignment: Alignment.center,
+          child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.transparent, Colors.pinkAccent])),
+              height: 50,
+              width: 50),
+        ),
+        Transform(
+          transform: Matrix4.skewX(-50 * pi / 180),
+          alignment: Alignment.center,
+          child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.transparent, Colors.purpleAccent])),
+              height: 50,
+              width: 50),
+        ),
+        Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            Transform(
+              transform: Matrix4.skewX(-50 * pi / 180),
+              alignment: Alignment.topRight,
+              child: Container(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.transparent, Colors.purpleAccent])),
+                  height: 50,
+                  width: 50),
+            ),
+            Transform(
+              transform: Matrix4.skewX(50 * pi / 180),
+              alignment: Alignment.topRight,
+              child: Container(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.transparent, Colors.pinkAccent])),
+                  height: 50,
+                  width: 50),
+            ),
+          ],
         ),
         Container(
           alignment: Alignment.center,
           height: 100,
           width: 50,
           decoration: BoxDecoration(
+              shape: BoxShape.circle,
               gradient: LinearGradient(colors: [
-            Colors.white.withOpacity(.50),
-            Colors.greenAccent,
-            Colors.transparent,
-            Colors.yellowAccent,
-            // Colors.greenAccent,
-          ])),
+                Colors.white.withOpacity(.50),
+                Colors.greenAccent,
+                Colors.transparent,
+                Colors.yellowAccent,
+                // Colors.greenAccent,
+              ])),
         ),
-        Transform.rotate(
-          angle: 90 * pi / 180,
-          child: GradientText(
-            "XXX",
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 100,
-                fontWeight: FontWeight.w900),
-            colors: const [Colors.orange, Colors.transparent],
-            gradientDirection: GradientDirection.btt,
-          ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Transform(
+              transform: Matrix4.skewX(-50 * pi / 180),
+              alignment: Alignment.center,
+              child: Container(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.transparent, Colors.white])),
+                  height: 75,
+                  width: 75),
+            ),
+            Transform(
+              transform: Matrix4.skewX(50 * pi / 180),
+              alignment: Alignment.center,
+              child: Container(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.transparent, Colors.white])),
+                  height: 75,
+                  width: 75),
+            ),
+          ],
         ),
         Container(
           alignment: Alignment.center,
-          height: 175,
+          height: 100,
           width: 50,
           decoration: BoxDecoration(
+              shape: BoxShape.circle,
               gradient: LinearGradient(colors: [
-            Colors.white.withOpacity(.50),
-            Colors.greenAccent,
-            Colors.transparent,
-            Colors.yellowAccent,
-            // Colors.greenAccent,
-          ])),
+                Colors.white.withOpacity(.50),
+                Colors.greenAccent,
+                Colors.transparent,
+                Colors.yellowAccent,
+                // Colors.greenAccent,
+              ])),
         ),
       ],
     );

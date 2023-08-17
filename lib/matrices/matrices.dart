@@ -11,7 +11,8 @@ class Matrices extends StatefulWidget {
 
 class _MatricesState extends State<Matrices>
     with SingleTickerProviderStateMixin {
-  double x = 100;
+  final double centerWidth = 100;
+  final int noOfLeafs = 10;
 
   late AnimationController animationController;
   late Animation<double> firstAnimation;
@@ -22,8 +23,8 @@ class _MatricesState extends State<Matrices>
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 10000));
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 10));
     firstAnimation = Tween<double>(begin: 0, end: 90).animate(
         CurvedAnimation(parent: animationController, curve: Curves.linear));
     secondAnimation = Tween<double>(begin: 90, end: 180).animate(
@@ -55,76 +56,90 @@ class _MatricesState extends State<Matrices>
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    ...List.generate(45, (index) {
-                      return (thirdAnimation.value + (index * 2) < 270)
+                    ...List.generate(noOfLeafs, (index) {
+                      return (thirdAnimation.value +
+                                  (index * (90 / noOfLeafs)) <
+                              270)
                           ? Transform(
                               transform: Matrix4.identity()
                                 ..setEntry(3, 2, 0.001)
-                                ..rotateY((thirdAnimation.value + (index * 2)) *
+                                ..rotateY((thirdAnimation.value +
+                                        (index * (90 / noOfLeafs))) *
                                     (pi / 180))
-                                ..translate(x),
+                                ..translate(centerWidth),
                               alignment: FractionalOffset.center,
                               child: const CustomContainer(),
                             )
                           : const SizedBox();
                     }).reversed,
-                    ...List.generate(45, (index) {
-                      return (thirdAnimation.value + (index * 2) > 270)
+                    ...List.generate(noOfLeafs, (index) {
+                      return (thirdAnimation.value +
+                                  (index * (90 / noOfLeafs)) >
+                              270)
                           ? Transform(
                               transform: Matrix4.identity()
                                 ..setEntry(3, 2, 0.001)
-                                ..rotateY((thirdAnimation.value + (index * 2)) *
+                                ..rotateY((thirdAnimation.value +
+                                        (index * (90 / noOfLeafs))) *
                                     (pi / 180))
-                                ..translate(x),
+                                ..translate(centerWidth),
                               alignment: FractionalOffset.center,
                               child: const CustomContainer(),
                             )
                           : const SizedBox();
                     }),
-                    ...List.generate(45, (index) {
+                    ...List.generate(noOfLeafs, (index) {
                       return Transform(
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
-                          ..rotateY((fourthAnimation.value + (index * 2)) *
+                          ..rotateY((fourthAnimation.value +
+                                  (index * (90 / noOfLeafs))) *
                               (pi / 180))
-                          ..translate(x),
+                          ..translate(centerWidth),
                         alignment: FractionalOffset.center,
                         child: const CustomContainer(),
                       );
                     }),
-                    ...List.generate(45, (index) {
+                    ...List.generate(noOfLeafs, (index) {
                       return Transform(
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
-                          ..rotateY((secondAnimation.value + (index * 2)) *
+                          ..rotateY((secondAnimation.value +
+                                  (index * (90 / noOfLeafs))) *
                               (pi / 180))
-                          ..translate(x),
+                          ..translate(centerWidth),
                         alignment: FractionalOffset.center,
                         child: const CustomContainer(),
                       );
                     }).reversed,
-                    ...List.generate(45, (index) {
-                      return (firstAnimation.value + (index * 2) > 90)
+                    ...List.generate(noOfLeafs, (index) {
+                      return (firstAnimation.value +
+                                  (index * (90 / noOfLeafs)) >
+                              90)
                           ? Transform(
                               transform: Matrix4.identity()
                                 ..setEntry(3, 2, 0.001)
-                                ..rotateY(
-                                    (firstAnimation.value + 360 + (index * 2)) *
-                                        (pi / 180))
-                                ..translate(x),
+                                ..rotateY((firstAnimation.value +
+                                        360 +
+                                        (index * (90 / noOfLeafs))) *
+                                    (pi / 180))
+                                ..translate(centerWidth),
                               alignment: FractionalOffset.center,
                               child: const CustomContainer(),
                             )
                           : const SizedBox();
                     }).reversed,
-                    ...List.generate(45, (index) {
-                      return (firstAnimation.value + (index * 2) < 90)
+                    ...List.generate(noOfLeafs, (index) {
+                      return (firstAnimation.value +
+                                  (index * (90 / noOfLeafs)) <
+                              90)
                           ? Transform(
                               transform: Matrix4.identity()
                                 ..setEntry(3, 2, 0.001)
-                                ..rotateY((firstAnimation.value + (index * 2)) *
+                                ..rotateY((firstAnimation.value +
+                                        (index * (90 / noOfLeafs))) *
                                     (pi / 180))
-                                ..translate(x),
+                                ..translate(centerWidth),
                               alignment: FractionalOffset.center,
                               child: const CustomContainer(),
                             )
@@ -152,17 +167,11 @@ class CustomContainer extends StatelessWidget {
       width: 100,
       decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
-        Colors.red,
-        Colors.blue,
-        Colors.orange,
+        Colors.transparent,
+        Colors.purpleAccent,
+        Colors.yellowAccent,
+        Colors.greenAccent,
       ])),
-      child: Text(
-        "Transform".toUpperCase(),
-        style: const TextStyle(
-            color: Colors.transparent,
-            fontWeight: FontWeight.bold,
-            fontSize: 24),
-      ),
     );
   }
 }

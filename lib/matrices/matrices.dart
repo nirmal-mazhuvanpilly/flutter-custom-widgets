@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:limoverse_widgets/utils.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class Matrices extends StatefulWidget {
   const Matrices({super.key});
@@ -13,8 +15,8 @@ class _MatricesState extends State<Matrices>
   double panStart = 0.0;
   double panY = 0.0;
 
-  final ValueNotifier<double> currentPosition = ValueNotifier(0.0);
-  final ValueNotifier<double> sliderValue = ValueNotifier(0.0);
+  final ValueNotifier<double> currentPosition = ValueNotifier(45.0);
+  final ValueNotifier<double> sliderValue = ValueNotifier(155.0);
 
   double getYPosition() {
     if (currentPosition.value < 0) {
@@ -30,92 +32,111 @@ class _MatricesState extends State<Matrices>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: GestureDetector(
-        onVerticalDragUpdate: (details) {
-          panY = (details.localPosition.dy - panStart);
-          currentPosition.value = currentPosition.value + (panY / 100);
-          if (currentPosition.value < 0) {
-            currentPosition.value = 0;
-          } else if (currentPosition.value > 180) {
-            currentPosition.value = 180;
-          }
-        },
-        onVerticalDragStart: (details) {
-          panStart = details.localPosition.dy;
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                height: double.maxFinite,
-                width: double.maxFinite,
-                color: Colors.transparent,
-                child: Center(
-                  child: ValueListenableBuilder(
-                      valueListenable: currentPosition,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          const CylinderWidget(
-                            centerWidth: 100,
-                            noOfLeafs: 30,
-                            child: CustomContainer(),
-                          ),
-                          CylinderWidget(
-                            centerWidth: 0,
-                            noOfLeafs: 5,
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                  color: Colors.greenAccent.withOpacity(.10),
-                                  gradient: LinearGradient(colors: [
-                                    Colors.greenAccent,
-                                    Colors.greenAccent.withOpacity(.50),
-                                    Colors.transparent,
-                                  ]),
-                                  border: Border.all(
-                                      color:
-                                          Colors.greenAccent.withOpacity(.50)),
-                                  shape: BoxShape.circle),
+      body: SafeArea(
+        child: GestureDetector(
+          onVerticalDragUpdate: (details) {
+            panY = (details.localPosition.dy - panStart);
+            currentPosition.value = currentPosition.value + (panY / 100);
+            if (currentPosition.value < 0) {
+              currentPosition.value = 0;
+            } else if (currentPosition.value > 180) {
+              currentPosition.value = 180;
+            }
+          },
+          onVerticalDragStart: (details) {
+            panStart = details.localPosition.dy;
+          },
+          child: Column(
+            children: [
+              GradientText(
+                " SATURN ",
+                style: TextStyle(
+                    color: Colors.greenAccent.withOpacity(.50),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 50,
+                    fontStyle: FontStyle.italic),
+                colors: [
+                  HexColor("F8DE22"),
+                  HexColor("F94C10"),
+                  HexColor("C70039"),
+                  HexColor("900C3F"),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  height: double.maxFinite,
+                  width: double.maxFinite,
+                  color: Colors.transparent,
+                  child: Center(
+                    child: ValueListenableBuilder(
+                        valueListenable: currentPosition,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            const CylinderWidget(
+                              centerWidth: 100,
+                              noOfLeafs: 30,
+                              child: CustomContainer(),
                             ),
-                          ),
-                        ],
-                      ),
-                      builder: (context, value, child) {
-                        return ValueListenableBuilder<double>(
-                            valueListenable: sliderValue,
-                            builder: (context, sliderValue, sliderChild) {
-                              return Transform(
-                                transform: Matrix4.identity()
-                                  ..rotateX(getYPosition() * pi / 180)
-                                  ..rotateZ(sliderValue * pi / 180),
-                                alignment: Alignment.center,
-                                child: child,
-                              );
-                            });
-                      }),
+                            CylinderWidget(
+                              centerWidth: 0,
+                              noOfLeafs: 5,
+                              child: Container(
+                                height: 200,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                    color: Colors.greenAccent.withOpacity(.10),
+                                    gradient: LinearGradient(colors: [
+                                      HexColor("F8DE22").withOpacity(.50),
+                                      HexColor("F94C10").withOpacity(.50),
+                                      HexColor("C70039").withOpacity(.50),
+                                      HexColor("900C3F").withOpacity(.50),
+                                      Colors.transparent,
+                                    ]),
+                                    border: Border.all(
+                                        color: HexColor("F8DE22")
+                                            .withOpacity(.50)),
+                                    shape: BoxShape.circle),
+                              ),
+                            ),
+                          ],
+                        ),
+                        builder: (context, value, child) {
+                          return ValueListenableBuilder<double>(
+                              valueListenable: sliderValue,
+                              builder: (context, sliderValue, sliderChild) {
+                                return Transform(
+                                  transform: Matrix4.identity()
+                                    ..rotateX(getYPosition() * pi / 180)
+                                    ..rotateZ(sliderValue * pi / 180),
+                                  alignment: Alignment.center,
+                                  child: child,
+                                );
+                              });
+                        }),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50)
-                  .copyWith(bottom: 50),
-              child: ValueListenableBuilder<double>(
-                  valueListenable: sliderValue,
-                  builder: (context, value, child) {
-                    return Slider(
-                      value: value,
-                      max: 360,
-                      activeColor: Colors.greenAccent,
-                      inactiveColor: Colors.greenAccent.withOpacity(.20),
-                      onChanged: (double value) {
-                        sliderValue.value = value;
-                      },
-                    );
-                  }),
-            )
-          ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 50)
+                        .copyWith(bottom: 50),
+                child: ValueListenableBuilder<double>(
+                    valueListenable: sliderValue,
+                    builder: (context, value, child) {
+                      return Slider(
+                        value: value,
+                        max: 360,
+                        activeColor: HexColor("C70039"),
+                        inactiveColor: HexColor("C70039").withOpacity(.20),
+                        onChanged: (double value) {
+                          sliderValue.value = value;
+                        },
+                      );
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -289,10 +310,10 @@ class CustomContainer extends StatelessWidget {
             width: 15,
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-                Colors.greenAccent.withOpacity(.50),
+                HexColor("F8DE22").withOpacity(.50),
                 Colors.transparent,
               ]),
-              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+              border: Border.all(color: HexColor("F8DE22").withOpacity(.50)),
             ),
           ),
           const SizedBox(width: 5),
@@ -301,10 +322,10 @@ class CustomContainer extends StatelessWidget {
             width: 15,
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-                Colors.greenAccent.withOpacity(.50),
+                HexColor("F94C10").withOpacity(.50),
                 Colors.transparent,
               ]),
-              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+              border: Border.all(color: HexColor("F94C10").withOpacity(.50)),
             ),
           ),
           const SizedBox(width: 5),
@@ -313,10 +334,10 @@ class CustomContainer extends StatelessWidget {
             width: 15,
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-                Colors.greenAccent.withOpacity(.50),
+                HexColor("C70039").withOpacity(.50),
                 Colors.transparent,
               ]),
-              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+              border: Border.all(color: HexColor("C70039").withOpacity(.50)),
             ),
           ),
           const SizedBox(width: 5),
@@ -325,10 +346,10 @@ class CustomContainer extends StatelessWidget {
             width: 15,
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-                Colors.greenAccent.withOpacity(.50),
+                HexColor("900C3F").withOpacity(.50),
                 Colors.transparent,
               ]),
-              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+              border: Border.all(color: HexColor("900C3F").withOpacity(.50)),
             ),
           ),
         ],

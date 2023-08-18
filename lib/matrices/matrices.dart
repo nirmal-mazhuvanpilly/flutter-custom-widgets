@@ -12,7 +12,9 @@ class _MatricesState extends State<Matrices>
     with SingleTickerProviderStateMixin {
   double panStart = 0.0;
   double panY = 0.0;
+
   final ValueNotifier<double> currentPosition = ValueNotifier(0.0);
+  final ValueNotifier<double> sliderValue = ValueNotifier(0.0);
 
   double getYPosition() {
     if (currentPosition.value < 0) {
@@ -29,40 +31,91 @@ class _MatricesState extends State<Matrices>
     return Scaffold(
       backgroundColor: Colors.black,
       body: GestureDetector(
-        onPanUpdate: (details) {
+        onVerticalDragUpdate: (details) {
           panY = (details.localPosition.dy - panStart);
-          currentPosition.value = currentPosition.value + (panY / 500);
+          currentPosition.value = currentPosition.value + (panY / 100);
           if (currentPosition.value < 0) {
             currentPosition.value = 0;
           } else if (currentPosition.value > 180) {
             currentPosition.value = 180;
           }
         },
-        onPanStart: (details) {
+        onVerticalDragStart: (details) {
           panStart = details.localPosition.dy;
         },
-        onPanEnd: (details) {
-          // panStart = 0.0;
-        },
-        child: Container(
-          height: double.maxFinite,
-          width: double.maxFinite,
-          color: Colors.transparent,
-          child: Center(
-            child: ValueListenableBuilder(
-                valueListenable: currentPosition,
-                child: const CylinderWidget(
-                  child: CustomContainer(),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                height: double.maxFinite,
+                width: double.maxFinite,
+                color: Colors.transparent,
+                child: Center(
+                  child: ValueListenableBuilder(
+                      valueListenable: currentPosition,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const CylinderWidget(
+                            centerWidth: 100,
+                            noOfLeafs: 30,
+                            child: CustomContainer(),
+                          ),
+                          CylinderWidget(
+                            centerWidth: 0,
+                            noOfLeafs: 5,
+                            child: Container(
+                              height: 200,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                  color: Colors.greenAccent.withOpacity(.10),
+                                  gradient: LinearGradient(colors: [
+                                    Colors.greenAccent,
+                                    Colors.greenAccent.withOpacity(.50),
+                                    Colors.transparent,
+                                  ]),
+                                  border: Border.all(
+                                      color:
+                                          Colors.greenAccent.withOpacity(.50)),
+                                  shape: BoxShape.circle),
+                            ),
+                          ),
+                        ],
+                      ),
+                      builder: (context, value, child) {
+                        return ValueListenableBuilder<double>(
+                            valueListenable: sliderValue,
+                            builder: (context, sliderValue, sliderChild) {
+                              return Transform(
+                                transform: Matrix4.identity()
+                                  ..rotateX(getYPosition() * pi / 180)
+                                  ..rotateZ(sliderValue * pi / 180),
+                                alignment: Alignment.center,
+                                child: child,
+                              );
+                            });
+                      }),
                 ),
-                builder: (context, value, child) {
-                  return Transform(
-                    transform: Matrix4.identity()
-                      ..rotateX(getYPosition() * pi / 180),
-                    alignment: Alignment.center,
-                    child: child,
-                  );
-                }),
-          ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50)
+                  .copyWith(bottom: 50),
+              child: ValueListenableBuilder<double>(
+                  valueListenable: sliderValue,
+                  builder: (context, value, child) {
+                    return Slider(
+                      value: value,
+                      max: 360,
+                      activeColor: Colors.greenAccent,
+                      inactiveColor: Colors.greenAccent.withOpacity(.20),
+                      onChanged: (double value) {
+                        sliderValue.value = value;
+                      },
+                    );
+                  }),
+            )
+          ],
         ),
       ),
     );
@@ -70,9 +123,15 @@ class _MatricesState extends State<Matrices>
 }
 
 class CylinderWidget extends StatefulWidget {
-  const CylinderWidget({super.key, this.child});
+  const CylinderWidget(
+      {super.key,
+      this.child,
+      required this.centerWidth,
+      required this.noOfLeafs});
 
   final Widget? child;
+  final double centerWidth;
+  final int noOfLeafs;
 
   @override
   State<CylinderWidget> createState() => _CylinderWidgetState();
@@ -80,9 +139,6 @@ class CylinderWidget extends StatefulWidget {
 
 class _CylinderWidgetState extends State<CylinderWidget>
     with SingleTickerProviderStateMixin {
-  final double centerWidth = 100;
-  final int noOfLeafs = 5;
-
   late AnimationController animationController;
   late Animation<double> firstAnimation;
   late Animation<double> secondAnimation;
@@ -120,82 +176,90 @@ class _CylinderWidgetState extends State<CylinderWidget>
           return Stack(
             alignment: Alignment.center,
             children: [
-              ...List.generate(noOfLeafs, (index) {
-                return (thirdAnimation.value + (index * (90 / noOfLeafs)) < 270)
+              ...List.generate(widget.noOfLeafs, (index) {
+                return (thirdAnimation.value +
+                            (index * (90 / widget.noOfLeafs)) <
+                        270)
                     ? Transform(
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
                           ..rotateY((thirdAnimation.value +
-                                  (index * (90 / noOfLeafs))) *
+                                  (index * (90 / widget.noOfLeafs))) *
                               (pi / 180))
-                          ..translate(centerWidth),
+                          ..translate(widget.centerWidth),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
                     : const SizedBox.shrink();
               }).reversed,
-              ...List.generate(noOfLeafs, (index) {
-                return (thirdAnimation.value + (index * (90 / noOfLeafs)) > 270)
+              ...List.generate(widget.noOfLeafs, (index) {
+                return (thirdAnimation.value +
+                            (index * (90 / widget.noOfLeafs)) >
+                        270)
                     ? Transform(
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
                           ..rotateY((thirdAnimation.value +
-                                  (index * (90 / noOfLeafs))) *
+                                  (index * (90 / widget.noOfLeafs))) *
                               (pi / 180))
-                          ..translate(centerWidth),
+                          ..translate(widget.centerWidth),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
                     : const SizedBox.shrink();
               }),
-              ...List.generate(noOfLeafs, (index) {
+              ...List.generate(widget.noOfLeafs, (index) {
                 return Transform(
                   transform: Matrix4.identity()
                     ..setEntry(3, 2, 0.001)
-                    ..rotateY(
-                        (fourthAnimation.value + (index * (90 / noOfLeafs))) *
-                            (pi / 180))
-                    ..translate(centerWidth),
+                    ..rotateY((fourthAnimation.value +
+                            (index * (90 / widget.noOfLeafs))) *
+                        (pi / 180))
+                    ..translate(widget.centerWidth),
                   alignment: FractionalOffset.center,
                   child: child,
                 );
               }),
-              ...List.generate(noOfLeafs, (index) {
+              ...List.generate(widget.noOfLeafs, (index) {
                 return Transform(
                   transform: Matrix4.identity()
                     ..setEntry(3, 2, 0.001)
-                    ..rotateY(
-                        (secondAnimation.value + (index * (90 / noOfLeafs))) *
-                            (pi / 180))
-                    ..translate(centerWidth),
+                    ..rotateY((secondAnimation.value +
+                            (index * (90 / widget.noOfLeafs))) *
+                        (pi / 180))
+                    ..translate(widget.centerWidth),
                   alignment: FractionalOffset.center,
                   child: child,
                 );
               }).reversed,
-              ...List.generate(noOfLeafs, (index) {
-                return (firstAnimation.value + (index * (90 / noOfLeafs)) > 90)
+              ...List.generate(widget.noOfLeafs, (index) {
+                return (firstAnimation.value +
+                            (index * (90 / widget.noOfLeafs)) >
+                        90)
                     ? Transform(
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
                           ..rotateY((firstAnimation.value +
                                   360 +
-                                  (index * (90 / noOfLeafs))) *
+                                  (index * (90 / widget.noOfLeafs))) *
                               (pi / 180))
-                          ..translate(centerWidth),
+                          ..translate(widget.centerWidth),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
                     : const SizedBox.shrink();
               }).reversed,
-              ...List.generate(noOfLeafs, (index) {
-                return (firstAnimation.value + (index * (90 / noOfLeafs)) < 90)
+              ...List.generate(widget.noOfLeafs, (index) {
+                return (firstAnimation.value +
+                            (index * (90 / widget.noOfLeafs)) <
+                        90)
                     ? Transform(
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
                           ..rotateY((firstAnimation.value +
-                                  (index * (90 / noOfLeafs))) *
+                                  (index * (90 / widget.noOfLeafs))) *
                               (pi / 180))
-                          ..translate(centerWidth),
+                          ..translate(widget.centerWidth),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
@@ -214,6 +278,69 @@ class CustomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 5,
+            width: 15,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                Colors.greenAccent.withOpacity(.50),
+                Colors.transparent,
+              ]),
+              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+            ),
+          ),
+          const SizedBox(width: 5),
+          Container(
+            height: 5,
+            width: 15,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                Colors.greenAccent.withOpacity(.50),
+                Colors.transparent,
+              ]),
+              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+            ),
+          ),
+          const SizedBox(width: 5),
+          Container(
+            height: 5,
+            width: 15,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                Colors.greenAccent.withOpacity(.50),
+                Colors.transparent,
+              ]),
+              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+            ),
+          ),
+          const SizedBox(width: 5),
+          Container(
+            height: 5,
+            width: 15,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                Colors.greenAccent.withOpacity(.50),
+                Colors.transparent,
+              ]),
+              border: Border.all(color: Colors.greenAccent.withOpacity(.50)),
+            ),
+          ),
+        ],
+      ),
+    );
+    /*return Text(
+      "  ----",
+      style: TextStyle(
+          color: Colors.greenAccent.withOpacity(.50),
+          fontWeight: FontWeight.w900,
+          fontSize: 50),
+    );
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -337,6 +464,6 @@ class CustomContainer extends StatelessWidget {
               ])),
         ),
       ],
-    );
+    );*/
   }
 }

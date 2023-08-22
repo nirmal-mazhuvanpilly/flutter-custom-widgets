@@ -70,36 +70,10 @@ class _MatricesState extends State<Matrices>
                   child: Center(
                     child: ValueListenableBuilder(
                         valueListenable: currentPosition,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            const CylinderWidget(
-                              centerWidth: 100,
-                              noOfLeafs: 30,
-                              child: CustomContainer(),
-                            ),
-                            CylinderWidget(
-                              centerWidth: 0,
-                              noOfLeafs: 5,
-                              child: Container(
-                                height: 200,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    color: Colors.greenAccent.withOpacity(.10),
-                                    gradient: LinearGradient(colors: [
-                                      HexColor("F8DE22").withOpacity(.50),
-                                      HexColor("F94C10").withOpacity(.50),
-                                      HexColor("C70039").withOpacity(.50),
-                                      HexColor("900C3F").withOpacity(.50),
-                                      Colors.transparent,
-                                    ]),
-                                    border: Border.all(
-                                        color: HexColor("F8DE22")
-                                            .withOpacity(.50)),
-                                    shape: BoxShape.circle),
-                              ),
-                            ),
-                          ],
+                        child: const CylinderWidget(
+                          centerWidth: 100,
+                          noOfLeafs: 20,
+                          child: CustomContainer(),
                         ),
                         builder: (context, value, child) {
                           return ValueListenableBuilder<double>(
@@ -126,7 +100,7 @@ class _MatricesState extends State<Matrices>
                     builder: (context, value, child) {
                       return Slider(
                         value: value,
-                        max: 360,
+                        max: 180,
                         activeColor: HexColor("C70039"),
                         inactiveColor: HexColor("C70039").withOpacity(.20),
                         onChanged: (double value) {
@@ -299,61 +273,80 @@ class CustomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 5,
-            width: 15,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                HexColor("F8DE22").withOpacity(.50),
-                Colors.transparent,
-              ]),
-              border: Border.all(color: HexColor("F8DE22").withOpacity(.50)),
-            ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 200,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 5,
+                width: 15,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    HexColor("F8DE22").withOpacity(1),
+                    Colors.transparent,
+                  ]),
+                  border:
+                      Border.all(color: HexColor("F8DE22").withOpacity(.75)),
+                ),
+              ),
+              const SizedBox(width: 5),
+              Container(
+                height: 5,
+                width: 15,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    HexColor("F94C10").withOpacity(1),
+                    Colors.transparent,
+                  ]),
+                  border:
+                      Border.all(color: HexColor("F94C10").withOpacity(.75)),
+                ),
+              ),
+              const SizedBox(width: 5),
+              Container(
+                height: 5,
+                width: 15,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    HexColor("C70039").withOpacity(1),
+                    Colors.transparent,
+                  ]),
+                  border:
+                      Border.all(color: HexColor("C70039").withOpacity(.75)),
+                ),
+              ),
+              const SizedBox(width: 5),
+              Container(
+                height: 5,
+                width: 15,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    HexColor("900C3F").withOpacity(1),
+                    Colors.transparent,
+                  ]),
+                  border:
+                      Border.all(color: HexColor("900C3F").withOpacity(.75)),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 5),
-          Container(
-            height: 5,
-            width: 15,
+        ),
+        Transform.translate(
+          offset: const Offset(-100, 0),
+          child: Container(
+            height: 200,
+            width: 200,
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                HexColor("F94C10").withOpacity(.50),
-                Colors.transparent,
-              ]),
-              border: Border.all(color: HexColor("F94C10").withOpacity(.50)),
-            ),
+                border: Border.all(color: HexColor("EA1179").withOpacity(.20)),
+                shape: BoxShape.circle),
           ),
-          const SizedBox(width: 5),
-          Container(
-            height: 5,
-            width: 15,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                HexColor("C70039").withOpacity(.50),
-                Colors.transparent,
-              ]),
-              border: Border.all(color: HexColor("C70039").withOpacity(.50)),
-            ),
-          ),
-          const SizedBox(width: 5),
-          Container(
-            height: 5,
-            width: 15,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                HexColor("900C3F").withOpacity(.50),
-                Colors.transparent,
-              ]),
-              border: Border.all(color: HexColor("900C3F").withOpacity(.50)),
-            ),
-          ),
-        ],
-      ),
+        )
+      ],
     );
     /*return Text(
       "  ----",

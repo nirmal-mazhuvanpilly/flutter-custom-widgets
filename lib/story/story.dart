@@ -19,8 +19,9 @@ class Story extends StatefulWidget {
   State<Story> createState() => _StoryState();
 }
 
-class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
+class _StoryState extends State<Story> with TickerProviderStateMixin {
   late final AnimationController animationController;
+  late final AnimationController rotatingAnimationController;
   late final Animation<double> animation;
   late final Animation<double> rotatingAnimation;
   late final Animation<double> linearAnimation;
@@ -31,22 +32,30 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
     super.initState();
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 2000));
+    rotatingAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 2000));
+
     animation = Tween<double>(
             begin: 0,
             end: ((360 - (((widget.sections ?? 8) - 1) * 10)) /
                 (widget.sections ?? 8)))
         .animate(
             CurvedAnimation(parent: animationController, curve: Curves.linear));
+    linearAnimation = Tween<double>(begin: 0, end: 11).animate(
+        CurvedAnimation(parent: animationController, curve: Curves.linear));
+
     rotatingAnimation = Tween<double>(begin: 0, end: 360).animate(
-        CurvedAnimation(parent: animationController, curve: Curves.linear));
-    linearAnimation = Tween<double>(begin: 0, end: 10).animate(
-        CurvedAnimation(parent: animationController, curve: Curves.linear));
-    animationController.repeat();
+        CurvedAnimation(
+            parent: rotatingAnimationController, curve: Curves.linear));
+
+    animationController.forward();
+    rotatingAnimationController.repeat();
   }
 
   @override
   void dispose() {
     animationController.dispose();
+    rotatingAnimationController.dispose();
     super.dispose();
   }
 
@@ -76,7 +85,7 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
             if (true)
               Positioned.fill(
                 child: AnimatedBuilder(
-                    animation: animationController,
+                    animation: rotatingAnimationController,
                     builder: (context, child) {
                       return Transform.rotate(
                         angle: angleInRadians * rotatingAnimation.value,

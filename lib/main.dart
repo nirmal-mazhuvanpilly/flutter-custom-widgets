@@ -8,7 +8,7 @@ import 'package:limoverse_widgets/custom_track_shape.dart';
 import 'package:limoverse_widgets/date_n_time_picker/custom_date_picker.dart'
     as custom_date_picker;
 import 'package:limoverse_widgets/matrices/matrices.dart';
-import 'package:limoverse_widgets/story/story.dart';
+import 'package:limoverse_widgets/story/story_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -214,7 +214,7 @@ class _HomeState extends State<Home> {
             TextButton(
                 onPressed: () async {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Story()));
+                      builder: (context) => const StoryScreen()));
                 },
                 child: const Text("Story")),
           ],

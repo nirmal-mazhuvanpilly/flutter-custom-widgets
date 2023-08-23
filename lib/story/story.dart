@@ -1,10 +1,19 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:limoverse_widgets/utils.dart';
 
 class Story extends StatefulWidget {
-  const Story({super.key});
+  final double? startingAngle;
+  final int? sections;
+  final double? strokeWidth;
+  final double? size;
+
+  const Story(
+      {super.key,
+      this.startingAngle,
+      this.sections,
+      this.strokeWidth,
+      this.size});
 
   @override
   State<Story> createState() => _StoryState();
@@ -21,12 +30,16 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 2500));
-    animation = Tween<double>(begin: 0, end: (290 / 8)).animate(
-        CurvedAnimation(parent: animationController, curve: Curves.linear));
+        vsync: this, duration: const Duration(milliseconds: 2000));
+    animation = Tween<double>(
+            begin: 0,
+            end: ((360 - (((widget.sections ?? 8) - 1) * 10)) /
+                (widget.sections ?? 8)))
+        .animate(
+            CurvedAnimation(parent: animationController, curve: Curves.linear));
     rotatingAnimation = Tween<double>(begin: 0, end: 360).animate(
         CurvedAnimation(parent: animationController, curve: Curves.linear));
-    linearAnimation = Tween<double>(begin: 0, end: ((360 / 7) / 290)).animate(
+    linearAnimation = Tween<double>(begin: 0, end: 10).animate(
         CurvedAnimation(parent: animationController, curve: Curves.linear));
     animationController.repeat();
   }
@@ -39,47 +52,47 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Center(
-          child: SizedBox.square(
-            dimension: 75,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border:
-                          Border.all(color: Colors.grey.shade900, width: 2.5)),
-                  child: Container(
-                    margin: const EdgeInsets.all(5),
-                    child: Container(
-                        decoration: BoxDecoration(
+    return Center(
+      child: SizedBox.square(
+        dimension: widget.size ?? 75,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
                       color: Colors.grey.shade900,
-                      shape: BoxShape.circle,
-                    )),
-                  ),
-                ),
-                if (true)
-                  Positioned.fill(
-                    child: AnimatedBuilder(
-                        animation: animationController,
-                        builder: (context, child) {
-                          return Transform.rotate(
-                            angle: angleInRadians * rotatingAnimation.value,
-                            child: CustomPaint(
-                              foregroundPainter: MyCustomPainter(
-                                  animationValue: animation.value,
-                                  linearAnimationValue: linearAnimation.value),
-                            ),
-                          );
-                        }),
-                  ),
-              ],
+                      width: widget.strokeWidth ?? 2.5)),
+              child: Container(
+                margin: const EdgeInsets.all(5),
+                child: Container(
+                    decoration: BoxDecoration(
+                  color: Colors.grey.shade900,
+                  shape: BoxShape.circle,
+                )),
+              ),
             ),
-          ),
+            if (true)
+              Positioned.fill(
+                child: AnimatedBuilder(
+                    animation: animationController,
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: angleInRadians * rotatingAnimation.value,
+                        child: CustomPaint(
+                          foregroundPainter: MyCustomPainter(
+                            animationValue: animation.value,
+                            linearAnimationValue: linearAnimation.value,
+                            startingAngle: widget.startingAngle,
+                            sections: widget.sections,
+                            strokeWidth: widget.strokeWidth,
+                          ),
+                        ),
+                      );
+                    }),
+              ),
+          ],
         ),
       ),
     );
@@ -90,8 +103,17 @@ class MyCustomPainter extends CustomPainter {
   final double animationValue;
   final double linearAnimationValue;
 
-  MyCustomPainter(
-      {required this.animationValue, required this.linearAnimationValue});
+  final double? startingAngle;
+  final int? sections;
+  final double? strokeWidth;
+
+  MyCustomPainter({
+    required this.animationValue,
+    required this.linearAnimationValue,
+    this.startingAngle,
+    this.sections,
+    this.strokeWidth,
+  });
   @override
   void paint(Canvas canvas, Size size) {
     final width = size.width;
@@ -101,7 +123,7 @@ class MyCustomPainter extends CustomPainter {
 
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5
+      ..strokeWidth = strokeWidth ?? 2.5
       ..shader = LinearGradient(
         colors: [
           HexColor("#FFDC80"),
@@ -123,15 +145,18 @@ class MyCustomPainter extends CustomPainter {
       ));
 
     final rect = Rect.fromCenter(
-        center: center, width: width - 2.5, height: height - 2.5);
+        center: center,
+        width: width - (strokeWidth ?? 2.5),
+        height: height - (strokeWidth ?? 2.5));
 
     const angleInRadians = pi / 180;
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < (sections ?? 8); i++) {
       canvas.drawArc(
           rect,
-          ((270 + (i * 10)) + (animationValue * i)) * angleInRadians,
-          (animationValue * angleInRadians) + linearAnimationValue,
+          (((startingAngle ?? 270) + (i * 10)) + (animationValue * i)) *
+              angleInRadians,
+          ((animationValue + linearAnimationValue) * angleInRadians),
           false,
           paint);
     }

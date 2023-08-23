@@ -42,6 +42,7 @@ dependencies:
   fl_chart: ^0.62.0
   rainbow_color: ^2.0.1
   simple_gradient_text: ^1.2.4
+  gradient_borders: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -43,6 +43,8 @@ dependencies:
   rainbow_color: ^2.0.1
   simple_gradient_text: ^1.2.4
   gradient_borders: ^1.0.0
+  webview_flutter: any
+  webview_cookie_manager: ^2.0.6
 
 dev_dependencies:
   flutter_test:

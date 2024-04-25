@@ -8,6 +8,7 @@ import 'package:limoverse_widgets/custom_track_shape.dart';
 import 'package:limoverse_widgets/date_n_time_picker/custom_date_picker.dart'
     as custom_date_picker;
 import 'package:limoverse_widgets/matrices/matrices.dart';
+import 'package:limoverse_widgets/sample/sample.dart';
 import 'package:limoverse_widgets/story/story_screen.dart';
 
 void main() {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      home: const SampleScreen(),
     );
   }
 }
@@ -41,10 +42,9 @@ class _HomeState extends State<Home> {
   RangeValues rangeValues = const RangeValues(0, 20);
 
   final sampleText =
-      """Join us at the "Limoverse presents World Biohack Summit Dubai 2023" starting tomorrow.
+      """ Join us at the "Limoverse presents World Biohack Summit Dubai 2023" starting tomorrow.
       https://cretezy.com
-      www.livehealthcaresolution.com
-  """;
+      www.livehealthcaresolution.com """;
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ import 'package:limoverse_widgets/custom_track_shape.dart';
 import 'package:limoverse_widgets/date_n_time_picker/custom_date_picker.dart'
     as custom_date_picker;
 import 'package:limoverse_widgets/matrices/matrices.dart';
-import 'package:limoverse_widgets/sample/sample.dart';
+import 'package:limoverse_widgets/staggered_animation/staggered_animation.dart';
 import 'package:limoverse_widgets/story/story_screen.dart';
 
 void main() {
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SampleScreen(),
+      home: const Home(),
     );
   }
 }
@@ -209,7 +209,7 @@ class _HomeState extends State<Home> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const Matrices()));
                 },
-                child: const Text("Matrices")),
+                child: const Text("Saturn")),
             const HeightWidget(height: 10),
             TextButton(
                 onPressed: () async {
@@ -217,6 +217,13 @@ class _HomeState extends State<Home> {
                       builder: (context) => const StoryScreen()));
                 },
                 child: const Text("Story")),
+            const HeightWidget(height: 10),
+            TextButton(
+                onPressed: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const StaggeredListAnimation()));
+                },
+                child: const Text("Staggered")),
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:limoverse_widgets/extensions.dart';
 import 'package:limoverse_widgets/utils.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
@@ -71,7 +72,6 @@ class _MatricesState extends State<Matrices>
                     child: ValueListenableBuilder(
                         valueListenable: currentPosition,
                         child: const CylinderWidget(
-                          centerWidth: 100,
                           noOfLeafs: 20,
                           child: CustomContainer(),
                         ),
@@ -118,14 +118,10 @@ class _MatricesState extends State<Matrices>
 }
 
 class CylinderWidget extends StatefulWidget {
-  const CylinderWidget(
-      {super.key,
-      this.child,
-      required this.centerWidth,
-      required this.noOfLeafs});
+  const CylinderWidget({super.key, this.child, required this.noOfLeafs});
 
   final Widget? child;
-  final double centerWidth;
+
   final int noOfLeafs;
 
   @override
@@ -139,6 +135,7 @@ class _CylinderWidgetState extends State<CylinderWidget>
   late Animation<double> secondAnimation;
   late Animation<double> thirdAnimation;
   late Animation<double> fourthAnimation;
+  final double zAxisRange = 0.0001;
 
   @override
   void initState() {
@@ -177,11 +174,10 @@ class _CylinderWidgetState extends State<CylinderWidget>
                         270)
                     ? Transform(
                         transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
+                          ..setEntry(3, 2, zAxisRange)
                           ..rotateY((thirdAnimation.value +
                                   (index * (90 / widget.noOfLeafs))) *
-                              (pi / 180))
-                          ..translate(widget.centerWidth),
+                              (pi / 180)),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
@@ -193,11 +189,10 @@ class _CylinderWidgetState extends State<CylinderWidget>
                         270)
                     ? Transform(
                         transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
+                          ..setEntry(3, 2, zAxisRange)
                           ..rotateY((thirdAnimation.value +
                                   (index * (90 / widget.noOfLeafs))) *
-                              (pi / 180))
-                          ..translate(widget.centerWidth),
+                              (pi / 180)),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
@@ -206,11 +201,10 @@ class _CylinderWidgetState extends State<CylinderWidget>
               ...List.generate(widget.noOfLeafs, (index) {
                 return Transform(
                   transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
+                    ..setEntry(3, 2, zAxisRange)
                     ..rotateY((fourthAnimation.value +
                             (index * (90 / widget.noOfLeafs))) *
-                        (pi / 180))
-                    ..translate(widget.centerWidth),
+                        (pi / 180)),
                   alignment: FractionalOffset.center,
                   child: child,
                 );
@@ -218,11 +212,10 @@ class _CylinderWidgetState extends State<CylinderWidget>
               ...List.generate(widget.noOfLeafs, (index) {
                 return Transform(
                   transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
+                    ..setEntry(3, 2, zAxisRange)
                     ..rotateY((secondAnimation.value +
                             (index * (90 / widget.noOfLeafs))) *
-                        (pi / 180))
-                    ..translate(widget.centerWidth),
+                        (pi / 180)),
                   alignment: FractionalOffset.center,
                   child: child,
                 );
@@ -233,12 +226,11 @@ class _CylinderWidgetState extends State<CylinderWidget>
                         90)
                     ? Transform(
                         transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
+                          ..setEntry(3, 2, zAxisRange)
                           ..rotateY((firstAnimation.value +
                                   360 +
                                   (index * (90 / widget.noOfLeafs))) *
-                              (pi / 180))
-                          ..translate(widget.centerWidth),
+                              (pi / 180)),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
@@ -250,11 +242,10 @@ class _CylinderWidgetState extends State<CylinderWidget>
                         90)
                     ? Transform(
                         transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
+                          ..setEntry(3, 2, zAxisRange)
                           ..rotateY((firstAnimation.value +
                                   (index * (90 / widget.noOfLeafs))) *
-                              (pi / 180))
-                          ..translate(widget.centerWidth),
+                              (pi / 180)),
                         alignment: FractionalOffset.center,
                         child: child,
                       )
@@ -277,7 +268,7 @@ class CustomContainer extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         SizedBox(
-          width: 200,
+          width: context.sw(size: 0.8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,148 +327,32 @@ class CustomContainer extends StatelessWidget {
             ],
           ),
         ),
-        Transform.translate(
-          offset: const Offset(-100, 0),
-          child: Container(
-            height: 200,
-            width: 200,
-            decoration: BoxDecoration(
-                border: Border.all(color: HexColor("EA1179").withOpacity(.20)),
-                shape: BoxShape.circle),
+        SizedBox(
+          width: 150,
+          height: 150,
+          child: CustomPaint(
+            painter: ArcPainter(),
           ),
-        )
-      ],
-    );
-    /*return Text(
-      "  ----",
-      style: TextStyle(
-          color: Colors.greenAccent.withOpacity(.50),
-          fontWeight: FontWeight.w900,
-          fontSize: 50),
-    );
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          alignment: Alignment.center,
-          height: 100,
-          width: 50,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(colors: [
-                Colors.white.withOpacity(.50),
-                Colors.greenAccent,
-                Colors.transparent,
-                Colors.yellowAccent,
-                // Colors.greenAccent,
-              ])),
-        ),
-        Text(
-          "DDD",
-          style: TextStyle(
-              color: Colors.white.withOpacity(.30),
-              fontWeight: FontWeight.w900,
-              fontSize: 50),
-        ),
-        Transform(
-          transform: Matrix4.skewX(50 * pi / 180),
-          alignment: Alignment.center,
-          child: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.transparent, Colors.pinkAccent])),
-              height: 50,
-              width: 50),
-        ),
-        Transform(
-          transform: Matrix4.skewX(-50 * pi / 180),
-          alignment: Alignment.center,
-          child: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.transparent, Colors.purpleAccent])),
-              height: 50,
-              width: 50),
-        ),
-        Stack(
-          alignment: Alignment.centerLeft,
-          children: [
-            Transform(
-              transform: Matrix4.skewX(-50 * pi / 180),
-              alignment: Alignment.topRight,
-              child: Container(
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.transparent, Colors.purpleAccent])),
-                  height: 50,
-                  width: 50),
-            ),
-            Transform(
-              transform: Matrix4.skewX(50 * pi / 180),
-              alignment: Alignment.topRight,
-              child: Container(
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.transparent, Colors.pinkAccent])),
-                  height: 50,
-                  width: 50),
-            ),
-          ],
-        ),
-        Container(
-          alignment: Alignment.center,
-          height: 100,
-          width: 50,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(colors: [
-                Colors.white.withOpacity(.50),
-                Colors.greenAccent,
-                Colors.transparent,
-                Colors.yellowAccent,
-                // Colors.greenAccent,
-              ])),
-        ),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Transform(
-              transform: Matrix4.skewX(-50 * pi / 180),
-              alignment: Alignment.center,
-              child: Container(
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.transparent, Colors.white])),
-                  height: 75,
-                  width: 75),
-            ),
-            Transform(
-              transform: Matrix4.skewX(50 * pi / 180),
-              alignment: Alignment.center,
-              child: Container(
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.transparent, Colors.white])),
-                  height: 75,
-                  width: 75),
-            ),
-          ],
-        ),
-        Container(
-          alignment: Alignment.center,
-          height: 100,
-          width: 50,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(colors: [
-                Colors.white.withOpacity(.50),
-                Colors.greenAccent,
-                Colors.transparent,
-                Colors.yellowAccent,
-                // Colors.greenAccent,
-              ])),
         ),
       ],
-    );*/
+    );
   }
+}
+
+class ArcPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    const startAngle = -pi / 2; // Starting from top
+    const sweepAngle = pi; // Half circle
+    final paint = Paint()
+      ..color = HexColor("EA1179").withOpacity(.20)
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawArc(rect, startAngle, sweepAngle, false, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
